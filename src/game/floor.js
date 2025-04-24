@@ -1,7 +1,7 @@
 export default class Floor {
     constructor(game) {
         this.game = game;
-        this.width = this.game.width * .70;
+        this.width = this.game.width;
         this.height = 100;
         this.x = this.game.width - this.width;
         this.y = this.game.height - this.height;

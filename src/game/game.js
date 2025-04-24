@@ -8,14 +8,18 @@ export default class Game {
     this.width = canvas.width;
     this.height = canvas.height;
 
+    this.keys = [];
+
     this.floor = new Floor(this);
     this.character = new Character(this);
 
     this.lastTime = 0;
     this.animationId = null;
     this.handleResize = this.handleResize.bind(this);
+    this.handleKeydown = this.handleKeydown.bind(this);
+    this.handleKeyup = this.handleKeyup.bind(this);
     this.animate = this.animate.bind(this);
-    
+
     this.start();
   }
 
@@ -27,7 +31,6 @@ export default class Game {
       rect1.y + rect1.height > rect2.y
     );
   }
-  
 
   start() {
     this.resize(window.innerWidth, window.innerHeight);
@@ -43,13 +46,28 @@ export default class Game {
   handleResize(e) {
     this.resize(e.target.innerWidth, e.target.innerHeight);
   }
+  handleKeydown(e) {
+    if (this.keys.indexOf(e.key) === -1) {
+      this.keys.push(e.key);
+    }
+  }
+  handleKeyup(e) {
+    const index = this.keys.indexOf(e.key);
+    if (index > -1) {
+      this.keys.splice(index, 1);
+    }
+  }
 
   addEventListeners() {
     window.addEventListener("resize", this.handleResize);
+    window.addEventListener("keydown", this.handleKeydown);
+    window.addEventListener("keyup", this.handleKeyup);
   }
-
+  
   removeEventListeners() {
     window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener("keydown", this.handleKeydown);
+    window.removeEventListener("keyup", this.handleKeyup);
   }
 
   animate(timestamp) {
