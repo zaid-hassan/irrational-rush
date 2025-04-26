@@ -10,7 +10,7 @@ export default class Character {
     this.velocityX = 0;
     this.velocityY = 0;
     this.acceleration = 5;
-    this.deceleration = 5;
+    this.deceleration = 8;
     this.gravity = 0.5;
     this.maxVelocityX = 15;
     this.maxVelocityY = 30;
@@ -20,6 +20,8 @@ export default class Character {
 
   update(deltaTime) {
     const dt = deltaTime / 1000;
+
+    this.x -= this.game.floor.speedX * dt;
 
     const keys = this.game.keys;
     const left = keys.includes("ArrowLeft");
