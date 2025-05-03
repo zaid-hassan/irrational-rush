@@ -1,5 +1,6 @@
 import Character from "./character";
 import Floor from "./floor";
+import FloorManager from "./floorManager";
 
 export default class Game {
   constructor(canvas, ctx) {
@@ -12,6 +13,7 @@ export default class Game {
 
     this.floor = new Floor(this);
     this.character = new Character(this);
+    this.floorManager = new FloorManager(this);
 
     this.lastTime = 0;
     this.animationId = null;
@@ -63,7 +65,7 @@ export default class Game {
     window.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("keyup", this.handleKeyup);
   }
-  
+
   removeEventListeners() {
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("keydown", this.handleKeydown);
@@ -82,10 +84,15 @@ export default class Game {
   }
 
   render(deltaTime) {
-    this.floor.update(deltaTime);
-    this.floor.draw();
+    // this.floor.update(deltaTime);
+    // this.floor.draw();
     this.character.update(deltaTime);
     this.character.draw();
+    this.floorManager.handleFloorSpawn();
+    this.floorManager.floorPool.forEach((floor) => {
+      floor.update(deltaTime);
+      floor.draw();
+    });
   }
 
   stop() {

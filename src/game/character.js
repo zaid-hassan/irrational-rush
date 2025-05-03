@@ -21,6 +21,16 @@ export default class Character {
   update(deltaTime) {
     const dt = deltaTime / 1000;
 
+    const wasOnGround = this.game.floorManager.floorPool.some(
+      (floor) =>
+        !floor.available &&
+        this.game.isColliding({ ...this, y: this.y + 1 }, floor)
+    );
+
+    const collidedFloor = this.game.floorManager.floorPool.find(
+      (floor) => !floor.available && this.game.isColliding(this, floor)
+    );
+    console.log(collidedFloor)
     this.x -= this.game.floor.speedX * dt;
 
     const keys = this.game.keys;
@@ -48,15 +58,11 @@ export default class Character {
     const oldX = this.x;
     this.x += this.velocityX;
 
-    if (this.game.isColliding(this, this.game.floor)) {
+    if (collidedFloor) {
       this.x = oldX;
       this.velocityX = 0;
+      console.log("coloi");
     }
-
-    const wasOnGround = this.game.isColliding(
-      { ...this, y: this.y + 1 },
-      this.game.floor
-    );
 
     if (jump && wasOnGround) {
       this.velocityY = this.jumpForce;
@@ -67,7 +73,11 @@ export default class Character {
 
     this.y += this.velocityY;
 
-    if (this.game.isColliding(this, this.game.floor)) {
+    const floorBelow = this.game.floorManager.floorPool.find(
+      (floor) => !floor.available && this.game.isColliding(this, floor)
+    );
+
+    if (floorBelow) {
       this.y = this.game.floor.y - this.height;
       this.velocityY = 0;
     }
@@ -80,5 +90,6 @@ export default class Character {
     ctx.fillStyle = "cyan";
     ctx.fill();
     ctx.closePath();
+    // console.log('draw', this.x, this.y)
   }
 }
